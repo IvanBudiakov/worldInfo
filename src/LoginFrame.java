@@ -69,6 +69,7 @@ public class LoginFrame extends JFrame {
         txtPassword.setPreferredSize(new Dimension(100, 20));
         contentPane.add(txtPassword);
 
+        
         JButton btnLogin = new JButton("Login");
         btnLogin.addActionListener(
                 event -> {
