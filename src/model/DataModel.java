@@ -7,7 +7,9 @@ import java.util.Random;
 
 import data.Database;
 import data.daos.CityDao;
+import data.daos.UserDao;
 import data.entities.City;
+import data.entities.User;
 
 public class DataModel {
 
@@ -23,6 +25,40 @@ public class DataModel {
 
         return headers;
     }
+
+    public static void addUser(String username, String password){
+        try(Connection connection = Database.getDatabaseConnection();){
+
+            User user = new User();
+
+            user.setID(null);
+            user.setUserName(username);
+            user.setPwd(password);
+
+            UserDao newUser = new UserDao(connection);
+
+            newUser.insert(user);
+            System.out.println("insertion" + user + "completed successfully");
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static User findUserByName(String username){
+        User user = null;
+        try(Connection connection = Database.getDatabaseConnection();) {
+            UserDao theUser = new UserDao(connection);
+            user = theUser.findUserByName(username);
+            
+        } catch (SQLException e) {
+            e.getStackTrace();
+        }
+        return user;
+    }
+
     public  static String[][] getCityData()
     {
         String[][] cityData = null;

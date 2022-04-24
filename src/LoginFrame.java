@@ -10,7 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.xml.crypto.Data;
 
+import data.daos.UserDao;
+import data.entities.User;
+import model.DataModel;
 import view.MainFrame;
 
 import java.awt.*;
@@ -20,10 +24,14 @@ public class LoginFrame extends JFrame {
     JDialog dlg;
 
     public LoginFrame(String title) {
-
+        
         super(title);
         initDialog();
         initLoginFrame();
+        User tempUser = DataModel.findUserByName("user1");
+        if (tempUser == null)
+            DataModel.addUser("user1",
+                    "a03ab19b866fc585b5cb1812a2f63ca861e7e7643ee5d43fd7106b623725fd67");
 
     }
 
@@ -69,21 +77,34 @@ public class LoginFrame extends JFrame {
         txtPassword.setPreferredSize(new Dimension(100, 20));
         contentPane.add(txtPassword);
 
-        
         JButton btnLogin = new JButton("Login");
-        btnLogin.addActionListener(
+    
+    btnLogin.addActionListener(
                 event -> {
-                    char[] password = { 'j', 'a', 'v', 'a' };
-                    String encryptedAttempt = encryptToString(txtPassword.getPassword());
-                    String encryptedPassword = encryptToString(password);
+                    
+                    String name = txtUserName.getText();
+                    
+                    User currentUser = DataModel.findUserByName(name);
 
-                    if (encryptedAttempt.equals(encryptedPassword)) {
-                        dlg.setVisible(false);
-                        dlg.dispose();
-                        new MainFrame("Main Application Page");
-                    } else
-                        JOptionPane.showMessageDialog(this, "Incorrect user name / password");
+                    if(currentUser != null){
+                        
+                        String password = currentUser.getPwd();
+
+                        String encryptedAttempt = encryptToString(txtPassword.getPassword());
+                        System.out.println("\n\nencrypted Attempt: " + encryptedAttempt);
+
+                        // String encryptedPassword = encryptToString(password);
+
+
+                        if (encryptedAttempt.equals(password)) {
+                            dlg.setVisible(false);
+                            dlg.dispose();
+                            new MainFrame("Main Application Page");
+                        } else
+                            JOptionPane.showMessageDialog(this, "Incorrect user name / password");
+                    }
                 });
+            
 
         contentPane.add(btnLogin);
         dlg.setPreferredSize(new Dimension(200, 200));
@@ -92,11 +113,11 @@ public class LoginFrame extends JFrame {
 
     }
 
-    private String encryptToString(char[] password) {
+    private String encryptToString(char[] cs) {
         try {
-            byte[] bytes = new byte[password.length];
+            byte[] bytes = new byte[cs.length];
             for (int i = 0; i < bytes.length; i++) {
-                bytes[i] = (byte) password[i];
+                bytes[i] = (byte) cs[i];
             }
 
             MessageDigest digester = MessageDigest.getInstance("SHA3-256");
