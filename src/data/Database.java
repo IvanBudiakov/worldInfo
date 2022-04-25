@@ -19,7 +19,7 @@ public class Database {
         /**
          * TODO - change your login credentials if necessary
          */
-        return DriverManager.getConnection(dbUrl, "root", "minivan.333");
+        return DriverManager.getConnection(dbUrl, "root", "");
 
     }
 

@@ -38,7 +38,7 @@ public class DataModel {
             UserDao newUser = new UserDao(connection);
 
             newUser.insert(user);
-            System.out.println("insertion" + user + "completed successfully");
+            System.out.println("insertion of " + user.getUserName() + " completed successfully");
 
         }catch(SQLException e){
             e.printStackTrace();
